@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { ThemeToggle, GithubLink, LanguageToggle } from '@/components/ui/HeaderControls';
 
 interface ProjectLayoutProps {
   title: string;
@@ -7,18 +8,28 @@ interface ProjectLayoutProps {
   visualization: ReactNode;
   documentation: ReactNode;
   footer?: ReactNode;
+  lang?: 'en' | 'zh';
+  setLang?: (l: 'en' | 'zh') => void;
 }
 
-export function ProjectLayout({ title, controls, visualization, documentation }: ProjectLayoutProps) {
+export function ProjectLayout({ title, controls, visualization, documentation, lang, setLang }: ProjectLayoutProps) {
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-background">
       {/* 顶部导航 */}
-      <header className="h-14 border-b flex items-center px-6 bg-card shrink-0 z-10">
-        <Link to="/" className="font-bold text-lg mr-8 hover:text-primary transition-colors">
-          MathViz Lab
-        </Link>
-        <span className="text-muted-foreground mr-2">/</span>
-        <h1 className="font-semibold">{title}</h1>
+      <header className="h-14 border-b flex items-center justify-between px-6 bg-card shrink-0 z-10 w-full">
+        <div className="flex items-center">
+          <Link to="/" className="font-bold text-lg mr-8 hover:text-primary transition-colors whitespace-nowrap">
+            MathViz Lab
+          </Link>
+          <span className="text-muted-foreground mr-2 hidden sm:inline">/</span>
+          <h1 className="font-semibold text-sm sm:text-base truncate">{title}</h1>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {lang && setLang && <LanguageToggle lang={lang} setLang={setLang} />}
+          <ThemeToggle />
+          <GithubLink />
+        </div>
       </header>
 
       {/* 主体内容：三栏布局 (左控制，中可视，右文档) 或 两栏布局 (左控制+可视，右文档) */}
