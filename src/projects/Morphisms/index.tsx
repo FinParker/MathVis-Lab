@@ -114,7 +114,7 @@ export default function MorphismsProject() {
       targetCounts.get(m.toId)?.push(m.fromId);
     });
 
-    const collisionEntry = Array.from(targetCounts.entries()).find(([k, v]) => v.length > 1);
+    const collisionEntry = Array.from(targetCounts.entries()).find(([, v]) => v.length > 1);
     const isMono = isTotal && !collisionEntry;
 
     // Counter-example g1, g2
@@ -127,7 +127,7 @@ export default function MorphismsProject() {
     // --- 2. Check Epimorphism ---
     // If missed: y not in Im(f).
     // Counter-example Y={0,1}, h1(b)=0, h2(y)=1 else 0.
-    const missedNode = Array.from(targetCounts.entries()).find(([k, v]) => v.length === 0)?.[0];
+    const missedNode = Array.from(targetCounts.entries()).find(([, v]) => v.length === 0)?.[0];
     const isEpi = isTotal && !missedNode;
 
     return { isTotal, isMono, isEpi, collisionNode: collisionEntry?.[0], g1Target, g2Target, missedNode };

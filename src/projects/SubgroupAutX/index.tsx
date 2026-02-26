@@ -88,8 +88,8 @@ const SubgroupAutX: React.FC = () => {
                 setCompositionElements(null);
               }}
               className={`px-3 py-2 text-left text-sm rounded transition-colors border ${selectedSubgroupIndex === idx
-                  ? 'bg-primary text-primary-foreground border-primary'
-                  : 'bg-white hover:bg-gray-50 border-gray-200'
+                ? 'bg-primary text-primary-foreground border-primary'
+                : 'bg-white hover:bg-gray-50 border-gray-200'
                 }`}
             >
               <span className="font-bold">{sg.name}</span>
@@ -168,7 +168,7 @@ const SubgroupAutX: React.FC = () => {
   );
 
   // Lattice coordinates
-  const latticeCoords = {
+  const latticeCoords: Record<number, [number, number]> = {
     5: [150, 40],  // S3 (Top)
     4: [80, 120],  // H4 (Order 3)
     1: [150, 120], // H1 (Order 2)
@@ -220,8 +220,8 @@ const SubgroupAutX: React.FC = () => {
                   }
                 }}
                 className={`w-24 h-28 flex flex-col items-center justify-center p-2 rounded-lg border-2 transition-all duration-200 ${isActive
-                    ? `${el.color} shadow-sm hover:shadow-md cursor-pointer hover:-translate-y-1`
-                    : 'bg-gray-50 border-gray-100 opacity-30 cursor-not-allowed grayscale'
+                  ? `${el.color} shadow-sm hover:shadow-md cursor-pointer hover:-translate-y-1`
+                  : 'bg-gray-50 border-gray-100 opacity-30 cursor-not-allowed grayscale'
                   }`}
               >
                 <div className="text-xl font-bold mb-2">{el.latex}</div>

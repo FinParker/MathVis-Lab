@@ -8,6 +8,7 @@ const RotationMatrix = lazy(() => import('./RotationMatrix/index'));
 const Morphisms = lazy(() => import('./Morphisms/index'));
 const IsoVsBijection = lazy(() => import('./IsoVsBijection/index'));
 const SubgroupAutX = lazy(() => import('./SubgroupAutX/index'));
+const CayleyYoneda = lazy(() => import('./CayleyYoneda/index'));
 
 export interface MathProject {
   id: string;
@@ -23,6 +24,15 @@ export interface MathProject {
 const BASE_URL = import.meta.env.BASE_URL;
 
 export const projectRegistry: MathProject[] = [
+  {
+    id: 'cayley-yoneda',
+    title: '凯莱定理与米田引理 (Cayley & Yoneda)',
+    title_en: "Cayley's Theorem & Yoneda Lemma",
+    description: '从群的左平移作用到范畴论的米田嵌入：不仅要看它是什么，更要看它怎么影响别人。',
+    description_en: 'From group actions (Left Regular Representation) to the Yoneda Embedding in Category Theory: not just what it is, but how it acts.',
+    tags: ['Group Theory', 'Category Theory', 'Abstract Algebra'],
+    component: CayleyYoneda,
+  },
   {
     id: 'subgroup-aut-x',
     title: 'Aut(X) 子群与格结构 (Aut(X) Subgroups)',
