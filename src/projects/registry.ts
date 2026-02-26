@@ -5,6 +5,9 @@ const RandomWalk = lazy(() => import('./RandomWalk/index'));
 const RandomWalk1D = lazy(() => import('./RandomWalk1D/index'));
 const FunctionMapping = lazy(() => import('./FunctionMapping/index'));
 const RotationMatrix = lazy(() => import('./RotationMatrix/index'));
+const Morphisms = lazy(() => import('./Morphisms/index'));
+const IsoVsBijection = lazy(() => import('./IsoVsBijection/index'));
+const SubgroupAutX = lazy(() => import('./SubgroupAutX/index'));
 
 export interface MathProject {
   id: string;
@@ -20,6 +23,33 @@ export interface MathProject {
 const BASE_URL = import.meta.env.BASE_URL;
 
 export const projectRegistry: MathProject[] = [
+  {
+    id: 'subgroup-aut-x',
+    title: 'Aut(X) 子群与格结构 (Aut(X) Subgroups)',
+    title_en: 'Aut(X) Subgroups (S3)',
+    description: '深入探索对称群 S3 的子群结构，可视化拉格朗日定理与子群格 (Lattice)。',
+    description_en: 'Explore the subgroup structure of the Symmetric Group S3, visualizing Lagrange Theorem and the Subgroup Lattice.',
+    tags: ['Group Theory', 'Abstract Algebra', 'Combinatorics'],
+    component: SubgroupAutX,
+  },
+  {
+    id: 'iso-vs-bijection',
+    title: '范畴论同构 vs 集合双射 (Isomorphism vs Bijection)',
+    title_en: 'Isomorphism vs Bijection',
+    description: '为什么双射不一定是同构？以偏序集（Poset）为例的交互式反例。',
+    description_en: 'Why is a bijection not always an isomorphism? An interactive counterexample in Posets.',
+    tags: ['Category Theory', 'Set Theory', 'Logic'],
+    component: IsoVsBijection,
+  },
+  {
+    id: 'category-morphisms',
+    title: '范畴论态射 (Category Morphisms)',
+    title_en: 'Category Theory: Morphisms',
+    description: '从集合论函数推广到抽象箭头：单态射与满态射的可取消性质可视化。',
+    description_en: 'Generalizing functions to abstract arrows: Visualizing cancellability of Monomorphisms and Epimorphisms.',
+    tags: ['Category Theory', 'Abstract Algebra', 'Logic'],
+    component: Morphisms,
+  },
   {
     id: 'rotation-matrix',
     title: '旋转矩阵与群 SO(n) (Rotation Matrix)',

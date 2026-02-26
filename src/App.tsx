@@ -28,6 +28,29 @@ const TRANSLATIONS = {
   }
 };
 
+// 标签翻译映射
+const TAG_TRANSLATIONS: Record<string, string> = {
+  'GROUP THEORY': '群论',
+  'ABSTRACT ALGEBRA': '抽象代数',
+  'COMBINATORICS': '组合数学',
+  'CATEGORY THEORY': '范畴论',
+  'SET THEORY': '集合论',
+  'LOGIC': '逻辑',
+  'LINEAR ALGEBRA': '线性代数',
+  'GEOMETRY': '几何',
+  'PROBABILITY': '概率论',
+  'DIFFUSION': '扩散',
+  'STOCHASTIC PROCESSES': '随机过程',
+  '1D': '一维',
+  'DISCRETE MATH': '离散数学'
+};
+
+function getTranslatedTag(tag: string, lang: 'zh' | 'en'): string {
+  if (lang === 'en') return tag;
+  const upperTag = tag.toUpperCase();
+  return TAG_TRANSLATIONS[upperTag] || tag;
+}
+
 // 简单的 Hook 管理语言偏好 (与 ProjectLayout 类似，但这里我们尝试简单复用 localStorage)
 function useLanguagePreference() {
   const [lang, setLang] = useState<'zh' | 'en'>(() => {
@@ -47,25 +70,50 @@ function useLanguagePreference() {
 // 首页组件：展示项目列表
 function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [lang, setLang] = useLanguagePreference();
   const t = TRANSLATIONS[lang];
 
+  // 提取所有唯一标签并排序
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    projectRegistry.forEach(p => p.tags.forEach(t => tags.add(t)));
+    return Array.from(tags).sort();
+  }, []);
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tag)
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  };
+
   const filteredProjects = useMemo(() => {
     const query = searchQuery.toLowerCase();
+
     return projectRegistry.filter(project => {
-      // 同时搜索中英文内容
+      // 1. 文本搜索过滤
       const title = project.title.toLowerCase();
       const titleEn = (project.title_en || '').toLowerCase();
       const desc = project.description.toLowerCase();
       const descEn = (project.description_en || '').toLowerCase();
 
-      return title.includes(query) ||
+      const matchesSearch = !query ||
+        title.includes(query) ||
         titleEn.includes(query) ||
         desc.includes(query) ||
         descEn.includes(query) ||
         project.tags.some(tag => tag.toLowerCase().includes(query));
+
+      // 2. 标签过滤 (OR 逻辑：只要包含选中的任意一个标签即可)
+      // 如果没有选中标签，则视为匹配所有
+      const matchesTags = selectedTags.length === 0 ||
+        selectedTags.some(tag => project.tags.includes(tag));
+
+      return matchesSearch && matchesTags;
     });
-  }, [searchQuery]);
+  }, [searchQuery, selectedTags]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -83,18 +131,42 @@ function HomePage() {
       </header>
 
       <main className="container mx-auto py-12 px-6">
-        <div className="max-w-2xl mx-auto text-center mb-12">
+        <div className="max-w-2xl mx-auto text-center mb-8">
           <h2 className="text-4xl font-extrabold mb-4">{t.heroTitle}</h2>
           <p className="text-lg text-muted-foreground">
             {t.heroDesc}
           </p>
         </div>
 
+        {/* 标签过滤器 */}
+        <div className="max-w-4xl mx-auto mb-10 flex flex-wrap justify-center gap-2">
+          {allTags.map(tag => (
+            <button
+              key={tag}
+              onClick={() => toggleTag(tag)}
+              className={`px-3 py-1 text-sm rounded-full transition-colors border ${selectedTags.includes(tag)
+                ? 'bg-primary text-primary-foreground border-primary'
+                : 'bg-secondary/50 text-secondary-foreground hover:bg-secondary border-transparent'
+                }`}
+            >
+              {getTranslatedTag(tag, lang)}
+            </button>
+          ))}
+          {selectedTags.length > 0 && (
+            <button
+              onClick={() => setSelectedTags([])}
+              className="px-3 py-1 text-sm rounded-full text-muted-foreground hover:text-foreground underline transition-colors"
+            >
+              {lang === 'zh' ? '清除筛选' : 'Clear filters'}
+            </button>
+          )}
+        </div>
+
         {filteredProjects.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
-            <p className="text-lg">{t.noResults} "{searchQuery}"</p>
+            <p className="text-lg">{t.noResults} {searchQuery && `"${searchQuery}"`} {selectedTags.length > 0 && `(Tags: ${selectedTags.join(', ')})`}</p>
             <button
-              onClick={() => setSearchQuery('')}
+              onClick={() => { setSearchQuery(''); setSelectedTags([]); }}
               className="mt-4 text-primary hover:underline"
             >
               {t.clearResults}
@@ -122,8 +194,16 @@ function HomePage() {
                     </h3>
                     <div className="flex flex-wrap gap-2 mb-3">
                       {project.tags.map(tag => (
-                        <span key={tag} className="px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-full">
-                          {tag}
+                        <span
+                          key={tag}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            toggleTag(tag);
+                          }}
+                          className={`px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-full hover:bg-primary hover:text-primary-foreground cursor-pointer transition-colors ${selectedTags.includes(tag) ? 'bg-primary text-primary-foreground' : ''
+                            }`}
+                        >
+                          {getTranslatedTag(tag, lang)}
                         </span>
                       ))}
                     </div>

@@ -41,3 +41,6 @@ dist-ssr
 # Operating System common files
 Desktop.ini
 Thumbs.db
+
+# Dev documentation
+docs
