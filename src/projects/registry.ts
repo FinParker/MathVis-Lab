@@ -9,6 +9,7 @@ const Morphisms = lazy(() => import('./Morphisms/index'));
 const IsoVsBijection = lazy(() => import('./IsoVsBijection/index'));
 const SubgroupAutX = lazy(() => import('./SubgroupAutX/index'));
 const CayleyYoneda = lazy(() => import('./CayleyYoneda/index'));
+const Lattice = lazy(() => import('./Lattice/index'));
 
 export interface MathProject {
   id: string;
@@ -32,6 +33,15 @@ export const projectRegistry: MathProject[] = [
     description_en: 'From group actions (Left Regular Representation) to the Yoneda Embedding in Category Theory: not just what it is, but how it acts.',
     tags: ['Group Theory', 'Category Theory', 'Abstract Algebra'],
     component: CayleyYoneda,
+  },
+  {
+    id: 'lattice-types',
+    title: '类型系统中的格 (Lattice in Type Systems)',
+    title_en: 'Lattice in Type Systems',
+    description: '可视化格结构 (Lattice) 与 OOP 继承、TypeScript 联合/交叉类型的数学联系。',
+    description_en: 'Visualizing Lattice structure and its mathematical connection to OOP inheritance and TypeScript Union/Intersection types.',
+    tags: ['Type Theory', 'Lattice', 'Programming Languages'],
+    component: Lattice,
   },
   {
     id: 'subgroup-aut-x',
